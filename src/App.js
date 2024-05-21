@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import Header from './components/Header/index';
+import History from './components/History/index';
 import './App.css';
-
+import { DATA_HISTORY } from './constants/data-history';
+import {useState, useEffect} from 'react';
 function App() {
+  
+  const [input, setInput] = useState('');
+  const [dataList, setDataList] = useState(DATA_HISTORY);
+  const removeItem = (id)=>{
+    setDataList(prev=>prev.filter((item)=> item.id !== id));
+  }
+
+  useEffect(()=>{
+    
+    setDataList(DATA_HISTORY.filter(item => {
+      
+      const {displayName, url} = item;
+      return displayName.toLowerCase().includes(input.toLowerCase()) || url.toLowerCase().includes(input.toLowerCase())
+      
+    }))
+  },[input])
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header setInput={setInput} input={input} />
+      <History input={input} dataList={dataList} removeItem={removeItem}/>
     </div>
   );
 }
